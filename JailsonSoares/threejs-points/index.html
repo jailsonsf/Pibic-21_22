@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Points</title>
+		<style>
+			body { margin: 0;}
+		</style>
+	</head>
+	<body>
+		<script type="module">
+            import * as THREE from 'https://cdn.skypack.dev/pin/three@v0.134.0-mlfrkS6HEbKKwwCDDo6H/mode=imports/optimized/three.js'
+
+            const scene = new THREE.Scene()
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+
+            const loader = new THREE.FileLoader()
+            loader.load('../data/100000.json', function(data) {
+                const positions = data
+
+                const color = new THREE.Color(0xffffff)
+
+                const geometry = new THREE.BufferGeometry()
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 2))
+                geometry.setAttribute('color', new THREE.Float32BufferAttribute(color, 2))
+                geometry.computeBoundingSphere();
+
+                const material = new THREE.PointsMaterial({size: 15, vertexColors: true })
+				const points = new THREE.Points(geometry, material)
+				scene.add(points)
+
+                const renderer = new THREE.WebGLRenderer()
+				renderer.setSize(window.innerWidth, window.innerHeight)
+                renderer.setPixelRatio( window.devicePixelRatio );
+                document.body.appendChild(renderer.domElement)
+
+                const animate = function(){
+                    renderer.render(scene, camera)
+                }
+
+                animate()
+            })
+		</script>
+	</body>
+</html>
